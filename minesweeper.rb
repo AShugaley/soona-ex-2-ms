@@ -80,17 +80,21 @@ module Board
   # populating the board
 
   def fill_board!
-    @board[1..@board.length-2].each_with_index do |row, row_index|
-      row[1..row.length-2].split('').each_with_index do |current, col_index|
-        next if current == "*"
-
-        adject_bombs = count_adjecnt_bombs(row_index+1, col_index+1)
-        @board[row_index + 1][col_index + 1] = adject_bombs.to_s if adject_bombs > 0
+    @board[1...(@board.length - 1)].each_with_index do |row, row_index|
+      row[1...(row.length - 1)].split('').each_with_index do |cell, col_index|
+        fill_cell(cell, row_index, col_index)
       end
     end
   end
 
-  def count_adjecnt_bombs(row, col)
+  def fill_cell(cell, row_index, col_index)
+    return if current == "*"
+
+    adject_bombs = count_adjacent_bombs(row_index + 1, col_index + 1)
+    @board[row_index + 1][col_index + 1] = adject_bombs.to_s if adject_bombs > 0
+  end
+
+  def count_adjacent_bombs(row, col)
     [
       check_bomb(row - 1, col - 1), # up left
       check_bomb(row - 1, col    ), # up
