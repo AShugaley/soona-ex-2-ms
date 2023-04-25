@@ -88,7 +88,7 @@ module Board
   end
 
   def fill_cell(cell, row_index, col_index)
-    return if current == "*"
+    return if cell == "*"
 
     adject_bombs = count_adjacent_bombs(row_index + 1, col_index + 1)
     @board[row_index + 1][col_index + 1] = adject_bombs.to_s if adject_bombs > 0
