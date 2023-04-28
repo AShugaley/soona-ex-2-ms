@@ -1,6 +1,14 @@
 module Board
   extend self
 
+  module BOARD
+    BOMB = '*'.freeze
+    VERTICAL_EDGE = '|'.freeze
+    HORIZONTAL_EDGE = '-'.freeze
+    CORNER = '+'.freeze
+    EMPTY = ' '.freeze
+  end
+
   def transform(board)
     @board = board
 
@@ -62,19 +70,19 @@ module Board
   end
 
   def validate_corner(cell)
-    raise ArgumentError unless cell == "+"
+    raise ArgumentError unless cell == BOARD::CORNER
   end
 
   def validate_horizontal_edge(cell)
-    raise ArgumentError unless cell == "-"
+    raise ArgumentError unless cell == BOARD::HORIZONTAL_EDGE
   end
 
   def validate_vertical_edge(cell)
-    raise ArgumentError unless cell == "|"
+    raise ArgumentError unless cell == BOARD::VERTICAL_EDGE
   end
 
   def validate_board_cell(cell)
-    raise ArgumentError unless cell == " " || cell == "*"
+    raise ArgumentError unless cell == BOARD::EMPTY || cell == BOARD::BOMB
   end
   
   # populating the board
@@ -82,16 +90,16 @@ module Board
   def fill_board!
     @board[1...(@board.length - 1)].each_with_index do |row, row_index|
       row[1...(row.length - 1)].split('').each_with_index do |cell, col_index|
-        fill_cell(cell, row_index, col_index)
+        fill_cell(cell, row_index + 1, col_index + 1)
       end
     end
   end
 
   def fill_cell(cell, row_index, col_index)
-    return if cell == "*"
+    return if cell == BOARD::BOMB
 
-    adject_bombs = count_adjacent_bombs(row_index + 1, col_index + 1)
-    @board[row_index + 1][col_index + 1] = adject_bombs.to_s if adject_bombs > 0
+    adject_bombs = count_adjacent_bombs(row_index, col_index)
+    @board[row_index][col_index] = adject_bombs.to_s if adject_bombs > 0
   end
 
   def count_adjacent_bombs(row, col)
@@ -108,6 +116,6 @@ module Board
   end
 
   def check_bomb(row, col)
-    @board[row][col] == "*" ? 1 : 0
+    @board[row][col] == BOARD::BOMB ? 1 : 0
   end
 end
